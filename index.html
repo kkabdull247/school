@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Crestwood University — Where Excellence Begins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
+:root{
+  /* Light — Ivory & Crimson */
+  --bg:       #faf8f3;
+  --bg2:      #f3efe7;
+  --bg3:      #e8e1d4;
+  --bg4:      #ddd4c2;
+  --surface:  #ffffff;
+  --crimson:  #8b1a1a;
+  --crimson2: #a82020;
+  --crimson3: #f0dada;
+  --crimson4: #faf0f0;
+  --gold:     #b8962e;
+  --gold2:    #d4ae40;
+  --gold3:    #f8f1da;
+  --navy:     #1a2340;
+  --text:     #1a1510;
+  --t2:       #4a3f32;
+  --t3:       #8c7d6a;
+  --t4:       rgba(26,21,16,.06);
+  --bdr:      rgba(139,26,26,.14);
+  --bdr2:     rgba(26,21,16,.10);
+  --bdr3:     rgba(26,21,16,.06);
+  --shadow:   0 4px 24px rgba(26,21,16,.08);
+  --shadow2:  0 16px 56px rgba(26,21,16,.12);
+  --serif:    'EB Garamond', Georgia, serif;
+  --sans:     'Instrument Sans', system-ui, sans-serif;
+  --g:        clamp(18px,5.5vw,96px);
+  --rad:      4px;
+  --rad2:     8px;
+  --rad3:     2px;
+  --trans:    background .4s, color .4s, border-color .4s;
+}
+[data-theme="dark"]{
+  --bg:       #0e0b08;
+  --bg2:      #171310;
+  --bg3:      #221d18;
+  --bg4:      #2e2720;
+  --surface:  #141009;
+  --crimson:  #c94040;
+  --crimson2: #e05555;
+  --crimson3: rgba(201,64,64,.18);
+  --crimson4: rgba(201,64,64,.08);
+  --gold:     #d4ae40;
+  --gold2:    #e8c85a;
+  --gold3:    rgba(212,174,64,.1);
+  --navy:     #3a5080;
+  --text:     #f0ece4;
+  --t2:       #b0a090;
+  --t3:       #6a5e50;
+  --t4:       rgba(240,236,228,.04);
+  --bdr:      rgba(201,64,64,.2);
+  --bdr2:     rgba(240,236,228,.1);
+  --bdr3:     rgba(240,236,228,.05);
+  --shadow:   0 4px 24px rgba(0,0,0,.35);
+  --shadow2:  0 16px 56px rgba(0,0,0,.45);
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:var(--trans);}
+a{text-decoration:none;color:inherit;}
+img{display:block;width:100%;object-fit:cover;}
+button{font-family:var(--sans);cursor:pointer;border:none;outline:none;}
+
+/* ══════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════ */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+}
+.ld-crest{
+  width:64px;height:64px;border:2px solid var(--crimson);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:1.8rem;font-weight:800;color:var(--crimson);
+  animation:crestpulse 1.4s ease-in-out infinite;
+}
+@keyframes crestpulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.06);opacity:.7;}}
+.ld-name{font-family:var(--serif);font-size:clamp(1.2rem,3vw,1.7rem);font-weight:600;color:var(--text);letter-spacing:.04em;}
+.ld-motto{font-size:11px;letter-spacing:.22em;color:var(--t3);text-transform:uppercase;font-family:var(--sans);font-weight:500;}
+.ld-bar-wrap{width:160px;height:1.5px;background:var(--bg3);margin-top:6px;}
+.ld-bar{height:1.5px;width:0%;background:var(--crimson);transition:width .06s linear;}
+.ld-pct{font-size:11px;letter-spacing:.16em;color:var(--t3);}
+
+/* ══════════════════════════════════════════
+   TOP UTILITY BAR
+══════════════════════════════════════════ */
+.util-bar{
+  background:var(--crimson);padding:8px var(--g);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.ub-left{font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.08em;font-weight:500;}
+.ub-right{display:flex;align-items:center;gap:18px;}
+.ub-link{font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.06em;font-weight:500;transition:color .25s;}
+.ub-link:hover{color:#fff;}
+.ub-sep{color:rgba(255,255,255,.25);font-size:10px;}
+/* DM Toggle */
+.dm-btn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:3px;padding:4px 10px;cursor:pointer;
+  font-size:10px;color:rgba(255,255,255,.8);letter-spacing:.1em;font-weight:600;
+  transition:all .3s;font-family:var(--sans);
+}
+.dm-btn:hover{background:rgba(255,255,255,.22);}
+.dm-icon{font-size:11px;}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+#hdr{
+  position:sticky;top:0;z-index:800;
+  background:var(--surface);border-bottom:1px solid var(--bdr3);
+  transition:box-shadow .4s,var(--trans);
+}
+#hdr.scrolled{box-shadow:var(--shadow);}
+.hdr-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--g);height:68px;
+}
+.hdr-logo{display:flex;align-items:center;gap:14px;}
+.hdr-seal{
+  width:46px;height:46px;border-radius:50%;
+  border:2px solid var(--crimson);background:var(--crimson4);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--serif);font-size:1.1rem;font-weight:800;color:var(--crimson);
+  letter-spacing:-.02em;transition:all .3s;
+}
+#hdr:hover .hdr-seal{background:var(--crimson);color:#fff;}
+.hdr-name-wrap{}
+.hdr-name{font-family:var(--serif);font-size:clamp(14px,1.6vw,19px);font-weight:700;color:var(--text);letter-spacing:.01em;line-height:1.1;}
+.hdr-sub{font-size:9px;letter-spacing:.2em;color:var(--t3);text-transform:uppercase;font-weight:600;margin-top:2px;}
+.nav-d{display:flex;align-items:center;gap:clamp(14px,2vw,30px);}
+.nav-d a{
+  font-size:13px;font-weight:500;color:var(--t2);letter-spacing:.02em;
+  position:relative;padding-bottom:2px;transition:color .25s;
+}
+.nav-d a::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;
+  background:var(--crimson);transition:width .3s;
+}
+.nav-d a:hover{color:var(--crimson);}
+.nav-d a:hover::after{width:100%;}
+.nav-cta{
+  background:var(--crimson);color:#fff;
+  padding:9px 22px;border-radius:var(--rad);
+  font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  transition:all .28s;
+}
+.nav-cta:hover{background:var(--crimson2);transform:translateY(-1px);box-shadow:0 6px 18px rgba(139,26,26,.3);}
+.ham{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;}
+.ham span{display:block;height:1.5px;background:var(--text);transform-origin:center;transition:all .35s;}
+.ham span:nth-child(1){width:100%;}
+.ham span:nth-child(2){width:65%;}
+.ham span:nth-child(3){width:82%;}
+.ham.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);width:100%;}
+.ham.open span:nth-child(2){opacity:0;}
+.ham.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);width:100%;}
+
+/* Mobile drawer */
+.mob-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:799;opacity:0;pointer-events:none;transition:opacity .35s;}
+.mob-bg.open{opacity:1;pointer-events:all;}
+.mob-drawer{
+  position:fixed;top:0;right:-110%;bottom:0;
+  width:min(310px,88vw);background:var(--surface);
+  border-left:1px solid var(--bdr2);z-index:800;
+  display:flex;flex-direction:column;padding:0;
+  transition:right .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;
+}
+.mob-drawer.open{right:0;}
+.mob-hdr{background:var(--crimson);padding:22px 24px;display:flex;align-items:center;gap:12px;}
+.mob-seal{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.9rem;font-weight:800;color:#fff;}
+.mob-hdr-name{font-family:var(--serif);font-size:1rem;font-weight:700;color:#fff;}
+.mob-hdr-sub{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.65);text-transform:uppercase;margin-top:2px;}
+.mob-links{display:flex;flex-direction:column;padding:0 0 0 0;}
+.mob-links a{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--bdr3);font-size:14px;font-weight:500;color:var(--t2);transition:color .25s,background .25s;}
+.mob-links a:hover{color:var(--crimson);background:var(--bg2);}
+.mob-links a em{font-style:normal;font-size:9px;color:var(--t3);}
+.mob-foot{margin-top:auto;padding:20px 24px;border-top:1px solid var(--bdr3);}
+.mob-foot p{font-size:11px;color:var(--t3);line-height:1.85;margin-bottom:14px;}
+.mob-apply-btn{display:block;width:100%;background:var(--crimson);color:#fff;text-align:center;padding:12px;border-radius:var(--rad);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:background .25s;}
+.mob-apply-btn:hover{background:var(--crimson2);}
+
+@media(max-width:900px){.nav-d{display:none;}.ham{display:flex;}.nav-cta{display:none;}}
+
+/* ══════════════════════════════════════════
+   HERO — editorial magazine layout
+══════════════════════════════════════════ */
+#hero{
+  position:relative;
+  background:var(--bg);
+  overflow:hidden;
+}
+/* Large decorative rule */
+.hero-rule{height:4px;background:var(--crimson);width:100%;}
+.hero-body{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:88vh;
+  align-items:stretch;
+}
+.hero-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(50px,8vh,100px) var(--g) clamp(50px,8vh,100px) var(--g);
+  position:relative;border-right:1px solid var(--bdr3);
+}
+/* Large background letter */
+.hero-bg-char{
+  position:absolute;bottom:-40px;right:-20px;
+  font-family:var(--serif);font-size:clamp(200px,28vw,380px);
+  color:var(--bg3);line-height:1;pointer-events:none;
+  font-weight:800;z-index:0;opacity:.5;
+}
+.hero-left-content{position:relative;z-index:1;}
+.hero-vol{font-size:10px;letter-spacing:.3em;color:var(--crimson);text-transform:uppercase;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.hero-vol::before{content:'';display:block;width:32px;height:1.5px;background:var(--crimson);}
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(2.8rem,5.5vw,6.2rem);
+  font-weight:700;line-height:1.02;letter-spacing:-.01em;
+  color:var(--text);margin-bottom:24px;
+}
+.hero-h1 em{font-style:italic;color:var(--crimson);}
+.hero-quote{
+  border-left:3px solid var(--crimson);padding-left:20px;
+  margin-bottom:32px;
+}
+.hero-quote p{font-family:var(--serif);font-size:clamp(1rem,1.4vw,1.25rem);color:var(--t2);line-height:1.75;font-style:italic;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px;}
+.btn-crimson{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--crimson);color:#fff;padding:13px 26px;border-radius:var(--rad);
+  font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  transition:all .3s;border:none;
+}
+.btn-crimson:hover{background:var(--crimson2);transform:translateY(-2px);box-shadow:0 10px 26px rgba(139,26,26,.32);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--text);padding:12px 24px;border-radius:var(--rad);
+  font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  border:1.5px solid var(--bdr2);transition:all .3s;
+}
+.btn-ghost:hover{border-color:var(--crimson);color:var(--crimson);}
+.hero-facts{display:flex;gap:clamp(20px,3.5vw,44px);flex-wrap:wrap;}
+.hf{border-top:1.5px solid var(--bdr2);padding-top:14px;flex:1;min-width:80px;}
+.hf-n{font-family:var(--serif);font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:700;color:var(--crimson);line-height:1;}
+.hf-l{font-size:9px;letter-spacing:.18em;color:var(--t3);text-transform:uppercase;margin-top:3px;font-weight:600;}
+
+/* hero right */
+.hero-right{position:relative;overflow:hidden;background:var(--bg2);}
+.hero-right img{width:100%;height:100%;object-fit:cover;object-position:center;}
+.hero-right-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,21,16,.55) 0%,transparent 50%);}
+.hero-caption{position:absolute;bottom:0;left:0;right:0;padding:clamp(20px,3vw,36px);}
+.hero-caption-text{font-family:var(--serif);font-size:clamp(1.2rem,2.2vw,1.9rem);font-weight:600;color:#fff;line-height:1.25;margin-bottom:8px;font-style:italic;}
+.hero-caption-sub{font-size:11px;letter-spacing:.16em;color:rgba(255,255,255,.65);text-transform:uppercase;font-weight:600;}
+
+@media(max-width:860px){
+  .hero-body{grid-template-columns:1fr;}
+  .hero-left{border-right:none;border-bottom:1px solid var(--bdr3);}
+  .hero-right{min-height:360px;}
+  .hero-bg-char{display:none;}
+}
+@media(max-width:480px){
+  .hero-btns{flex-direction:column;}
+  .btn-crimson,.btn-ghost{justify-content:center;}
+}
+
+/* ══════════════════════════════════════════
+   SHARED
+══════════════════════════════════════════ */
+.sec{padding:clamp(64px,10vh,120px) var(--g);transition:var(--trans);}
+.sec-alt{background:var(--bg2);}
+.sec-ruled{border-top:4px solid var(--crimson);}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:clamp(10px,1.5vh,16px);}
+.ey-line{width:28px;height:1.5px;background:var(--crimson);flex-shrink:0;}
+.ey-txt{font-size:10px;letter-spacing:.24em;color:var(--crimson);text-transform:uppercase;font-weight:700;}
+.sh2{font-family:var(--serif);font-size:clamp(1.9rem,4vw,3.8rem);font-weight:700;letter-spacing:-.01em;line-height:1.1;color:var(--text);margin-bottom:clamp(12px,2vh,20px);}
+.sh2 em{font-style:italic;color:var(--crimson);}
+.sh2.center{text-align:center;}
+.sh3{font-family:var(--serif);font-size:clamp(1.2rem,2vw,1.7rem);font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.sp{font-size:clamp(13px,1.1vw,15px);color:var(--t2);line-height:1.85;}
+.sp.center{text-align:center;}
+
+/* ══════════════════════════════════════════
+   ABOUT — editorial split
+══════════════════════════════════════════ */
+.about-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(40px,7vw,110px);align-items:center;}
+.about-img-frame{position:relative;}
+.aif-main{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--rad);}
+.aif-rule{position:absolute;top:-12px;left:-12px;right:40px;bottom:40px;border:2px solid var(--crimson);border-radius:var(--rad);pointer-events:none;}
+.aif-badge{
+  position:absolute;bottom:-20px;right:-20px;
+  background:var(--crimson);color:#fff;
+  padding:16px 22px;border-radius:var(--rad);
+  box-shadow:0 8px 24px rgba(139,26,26,.35);
+}
+.aib-n{font-family:var(--serif);font-size:2.2rem;font-weight:800;line-height:1;}
+.aib-l{font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;opacity:.85;margin-top:3px;}
+.about-pillars{display:flex;flex-direction:column;gap:clamp(16px,2.5vh,26px);margin-top:clamp(24px,4vh,40px);}
+.ap{display:flex;gap:18px;align-items:flex-start;padding-bottom:clamp(16px,2.5vh,26px);border-bottom:1px solid var(--bdr3);}
+.ap:last-child{border:none;padding-bottom:0;}
+.ap-num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--crimson4);border:1.5px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:.9rem;font-weight:700;color:var(--crimson);flex-shrink:0;
+  transition:all .3s;
+}
+.ap:hover .ap-num{background:var(--crimson);color:#fff;border-color:var(--crimson);}
+.ap-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.ap-desc{font-size:13px;color:var(--t2);line-height:1.72;}
+
+@media(max-width:860px){.about-grid{grid-template-columns:1fr;}.aif-rule{left:-8px;top:-8px;right:30px;bottom:30px;}.aif-badge{right:-8px;bottom:-8px;}}
+
+/* ══════════════════════════════════════════
+   PROGRAMMES (Services)
+══════════════════════════════════════════ */
+.prog-intro{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,80px);align-items:end;margin-bottom:clamp(44px,7vh,72px);}
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);}
+.pcard{
+  background:var(--surface);border:1px solid var(--bdr3);border-radius:var(--rad);
+  overflow:hidden;transition:all .38s;
+}
+.pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow2);border-color:var(--crimson);}
+.pcard-color{height:4px;}
+.pcard-body{padding:clamp(20px,2.8vw,32px);}
+.pcard-cat{font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--crimson);margin-bottom:12px;}
+.pcard-title{font-family:var(--serif);font-size:clamp(1.1rem,1.8vw,1.4rem);font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.25;}
+.pcard-desc{font-size:12px;color:var(--t2);line-height:1.75;margin-bottom:16px;}
+.pcard-meta{display:flex;gap:12px;flex-wrap:wrap;}
+.pm{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.06em;background:var(--bg2);padding:3px 10px;border-radius:20px;}
+.pcard-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--crimson);margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--bdr3);width:100%;
+  transition:gap .25s;
+}
+.pcard-link:hover{gap:10px;}
+
+@media(max-width:900px){.prog-intro{grid-template-columns:1fr;gap:20px;}.prog-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:540px){.prog-grid{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   ADMISSIONS PROCESS
+══════════════════════════════════════════ */
+.process-hdr{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:clamp(44px,7vh,72px);}
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.5vw,32px);}
+.pstep{
+  padding:clamp(22px,3vw,36px);background:var(--surface);
+  border:1px solid var(--bdr3);border-radius:var(--rad);
+  border-top:3px solid var(--crimson);transition:all .35s;
+}
+.pstep:hover{box-shadow:var(--shadow);transform:translateY(-4px);}
+.ps-num{font-family:var(--serif);font-size:2.8rem;font-weight:800;color:var(--bg3);line-height:1;margin-bottom:14px;transition:color .35s;}
+.pstep:hover .ps-num{color:var(--crimson3);}
+.ps-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.ps-desc{font-size:12px;color:var(--t2);line-height:1.7;}
+.ps-deadline{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--crimson);margin-top:12px;letter-spacing:.06em;}
+
+@media(max-width:860px){.process-hdr{grid-template-columns:1fr;gap:20px;}.proc-steps{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.proc-steps{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   STATS BAND
+══════════════════════════════════════════ */
+.stats-band{background:var(--crimson);padding:clamp(40px,6vh,72px) var(--g);}
+.stats-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.12);}
+.sstat{padding:clamp(24px,4vh,44px) clamp(16px,2vw,28px);text-align:center;background:var(--crimson);}
+.sstat-n{font-family:var(--serif);font-size:clamp(2.2rem,4vw,3.5rem);font-weight:800;color:#fff;line-height:1;margin-bottom:8px;}
+.sstat-l{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;}
+@media(max-width:700px){.stats-inner{grid-template-columns:1fr 1fr;}}
+@media(max-width:380px){.stats-inner{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   FACULTY
+══════════════════════════════════════════ */
+.faculty-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(36px,5vh,60px);flex-wrap:wrap;}
+.faculty-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,22px);}
+.fcard{background:var(--surface);border:1px solid var(--bdr3);border-radius:var(--rad);overflow:hidden;transition:all .35s;}
+.fcard:hover{border-color:var(--crimson);transform:translateY(-4px);box-shadow:var(--shadow2);}
+.fcard-img{aspect-ratio:3/4;overflow:hidden;position:relative;}
+.fcard-img img{width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(.3);transition:filter .6s,transform .6s;}
+.fcard:hover .fcard-img img{filter:grayscale(0);transform:scale(1.03);}
+.fcard-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(139,26,26,.85) 0%,transparent 55%);opacity:0;transition:.38s;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;}
+.fcard:hover .fcard-ov{opacity:1;}
+.fcard-ov-dept{font-size:11px;color:rgba(255,255,255,.75);letter-spacing:.1em;margin-bottom:4px;font-weight:500;}
+.fcard-ov-quote{font-family:var(--serif);font-size:13px;color:#fff;line-height:1.55;font-style:italic;transform:translateY(8px);transition:transform .38s;}
+.fcard:hover .fcard-ov-quote{transform:translateY(0);}
+.fcard-info{padding:16px;}
+.fcard-name{font-family:var(--serif);font-size:clamp(1rem,1.6vw,1.2rem);font-weight:700;color:var(--text);margin-bottom:3px;}
+.fcard-title{font-size:11px;color:var(--crimson);letter-spacing:.08em;text-transform:uppercase;font-weight:600;}
+.fcard-dept{font-size:11px;color:var(--t3);margin-top:5px;}
+@media(max-width:900px){.faculty-hdr{flex-direction:column;align-items:flex-start;}.faculty-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:480px){.faculty-grid{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   NEWS / EDITORIAL GRID
+══════════════════════════════════════════ */
+.news-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:clamp(36px,5.5vh,60px);}
+.news-grid{display:grid;grid-template-columns:2fr 1fr;gap:clamp(14px,2vw,24px);}
+.news-featured{border-radius:var(--rad);overflow:hidden;position:relative;cursor:pointer;}
+.nf-img{aspect-ratio:16/9;overflow:hidden;}
+.nf-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s;}
+.news-featured:hover .nf-img img{transform:scale(1.04);}
+.nf-body{padding:clamp(20px,2.5vw,32px) 0 0;}
+.nf-cat{font-size:10px;letter-spacing:.22em;color:var(--crimson);text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.nf-title{font-family:var(--serif);font-size:clamp(1.3rem,2.2vw,2rem);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px;transition:color .25s;}
+.news-featured:hover .nf-title{color:var(--crimson);}
+.nf-excerpt{font-size:13px;color:var(--t2);line-height:1.75;margin-bottom:12px;}
+.nf-meta{font-size:11px;color:var(--t3);font-weight:500;}
+.news-sidebar{display:flex;flex-direction:column;gap:0;}
+.ns-item{padding:clamp(14px,2vh,22px) 0;border-bottom:1px solid var(--bdr3);cursor:pointer;transition:all .28s;}
+.ns-item:last-child{border:none;}
+.ns-item:hover{padding-left:6px;}
+.ns-cat{font-size:9px;letter-spacing:.2em;color:var(--crimson);text-transform:uppercase;font-weight:700;margin-bottom:5px;}
+.ns-title{font-family:var(--serif);font-size:clamp(.95rem,1.4vw,1.1rem);font-weight:600;color:var(--text);line-height:1.3;margin-bottom:5px;transition:color .25s;}
+.ns-item:hover .ns-title{color:var(--crimson);}
+.ns-meta{font-size:11px;color:var(--t3);}
+@media(max-width:900px){.news-intro{grid-template-columns:1fr;gap:20px;}.news-grid{grid-template-columns:1fr;}.ns-item{padding:16px 0;}}
+
+/* ══════════════════════════════════════════
+   TESTIMONIALS
+══════════════════════════════════════════ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);}
+.xcard{
+  background:var(--surface);border:1px solid var(--bdr3);
+  border-radius:var(--rad);padding:clamp(22px,3vw,36px);
+  border-top:3px solid var(--crimson);transition:all .35s;
+}
+.xcard:hover{transform:translateY(-4px);box-shadow:var(--shadow2);}
+.xc-quote{font-family:var(--serif);font-size:36px;color:var(--crimson3);line-height:.8;margin-bottom:10px;}
+.xc-text{font-family:var(--serif);font-size:clamp(1rem,1.3vw,1.15rem);color:var(--text);line-height:1.7;font-style:italic;margin-bottom:22px;}
+.xc-auth{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--bdr3);}
+.xc-av{width:42px;height:42px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--bg3);}
+.xc-av img{width:42px;height:42px;object-fit:cover;}
+.xc-name{font-size:13px;font-weight:600;color:var(--text);}
+.xc-info{font-size:11px;color:var(--crimson);font-weight:600;letter-spacing:.04em;margin-top:2px;}
+@media(max-width:860px){.testi-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.testi-grid{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   TUITION / PRICING
+══════════════════════════════════════════ */
+.tuition-hdr{text-align:center;max-width:580px;margin:0 auto clamp(44px,7vh,72px);}
+.tuition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);max-width:960px;margin:0 auto;}
+.tc2{
+  background:var(--surface);border:1.5px solid var(--bdr3);
+  border-radius:var(--rad);padding:clamp(24px,3.2vw,40px);position:relative;
+  transition:all .35s;
+}
+.tc2:hover{border-color:var(--crimson);box-shadow:var(--shadow);}
+.tc2.feat{background:var(--crimson);border-color:var(--crimson);}
+.tc2.feat *{color:#fff !important;}
+.tc2.feat .tc2-div{background:rgba(255,255,255,.2) !important;}
+.tc2.feat .tc2-list li::before{color:rgba(255,255,255,.7) !important;}
+.tc2.feat .tc2-btn{background:#fff !important;color:var(--crimson) !important;}
+.tc2-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--text) !important;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:5px 14px;border-radius:0 0 6px 6px;white-space:nowrap;}
+.tc2-tier{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--t3);font-weight:700;margin-bottom:12px;}
+.tc2-price{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:800;color:var(--text);line-height:1;margin-bottom:4px;letter-spacing:-.02em;}
+.tc2-price small{font-size:.38em;font-family:var(--sans);font-weight:400;vertical-align:super;}
+.tc2-cycle{font-size:11px;color:var(--t3);margin-bottom:20px;}
+.tc2-div{height:1px;background:var(--bdr3);margin-bottom:20px;}
+.tc2-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.tc2-list li{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:9px;}
+.tc2-list li::before{content:'✓';color:var(--crimson);font-weight:700;font-size:11px;flex-shrink:0;}
+.tc2-btn{width:100%;padding:12px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--bg2);color:var(--text);border:1.5px solid var(--bdr2);border-radius:var(--rad);transition:all .3s;}
+.tc2-btn:hover{background:var(--crimson);color:#fff;border-color:var(--crimson);}
+@media(max-width:760px){.tuition-grid{grid-template-columns:1fr;max-width:420px;}}
+
+/* ══════════════════════════════════════════
+   FAQ
+══════════════════════════════════════════ */
+.faq-wrap{display:grid;grid-template-columns:5fr 7fr;gap:clamp(36px,6vw,100px);align-items:start;}
+.faq-sticky{position:sticky;top:90px;}
+.faq-list{display:flex;flex-direction:column;}
+.fq{border-bottom:1px solid var(--bdr3);}
+.fq-q{display:flex;align-items:center;justify-content:space-between;padding:clamp(14px,2vh,22px) 0;cursor:pointer;font-size:clamp(13px,1.1vw,15px);font-weight:500;color:var(--t2);transition:color .28s;user-select:none;gap:14px;}
+.fq-q:hover{color:var(--text);}
+.fq-q.on{color:var(--crimson);}
+.fq-ico{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3);flex-shrink:0;transition:all .28s;font-style:normal;}
+.fq-q.on .fq-ico{border-color:var(--crimson);color:var(--crimson);transform:rotate(45deg);}
+.fq-body{height:0;overflow:hidden;transition:height .38s cubic-bezier(.16,1,.3,1);}
+.fq-body-in{padding:0 0 16px;font-size:13px;color:var(--t2);line-height:1.85;}
+@media(max-width:760px){.faq-wrap{grid-template-columns:1fr;}.faq-sticky{position:static;}}
+
+/* ══════════════════════════════════════════
+   CONTACT / APPLY
+══════════════════════════════════════════ */
+.apply-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:start;}
+.apply-info{}
+.apply-contact-items{display:flex;flex-direction:column;gap:0;margin-top:clamp(22px,3.5vh,36px);}
+.aci{display:flex;gap:14px;padding:clamp(14px,2.2vh,22px) 0;border-bottom:1px solid var(--bdr3);}
+.aci:last-child{border:none;}
+.aci-ico{
+  width:38px;height:38px;background:var(--crimson4);border-radius:var(--rad);
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+  transition:background .3s;border:1px solid var(--bdr);
+}
+.aci:hover .aci-ico{background:var(--crimson);filter:saturate(0) brightness(100);}
+.aci-lbl{font-size:9px;letter-spacing:.18em;color:var(--t3);text-transform:uppercase;font-weight:700;margin-bottom:5px;}
+.aci-val{font-size:clamp(12px,1.1vw,14px);color:var(--t2);line-height:1.65;}
+.apply-form-wrap{
+  background:var(--surface);border:1px solid var(--bdr2);
+  border-radius:var(--rad);padding:clamp(24px,3.5vw,44px);
+  box-shadow:var(--shadow);border-top:3px solid var(--crimson);
+}
+.af-title{font-family:var(--serif);font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:700;color:var(--text);margin-bottom:6px;}
+.af-sub{font-size:13px;color:var(--t3);margin-bottom:24px;}
+.af-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.af-field{display:flex;flex-direction:column;gap:6px;}
+.af-field.full{grid-column:span 2;}
+.af-label{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.08em;text-transform:uppercase;}
+.af-input{background:var(--bg2);border:1.5px solid var(--bdr3);border-radius:var(--rad);padding:11px 14px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .28s,background .28s;width:100%;}
+.af-input:focus{border-color:var(--crimson);background:var(--bg);}
+.af-input::placeholder{color:var(--t3);}
+.af-select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c7d6a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+.af-submit{width:100%;background:var(--crimson);color:#fff;padding:13px;border-radius:var(--rad);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:6px;transition:all .3s;}
+.af-submit:hover{background:var(--crimson2);transform:translateY(-1px);box-shadow:0 8px 22px rgba(139,26,26,.3);}
+@media(max-width:860px){.apply-grid{grid-template-columns:1fr;}.af-row{grid-template-columns:1fr;}.af-field.full{grid-column:1;}}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{background:var(--navy);border-top:4px solid var(--crimson);}
+[data-theme="dark"] footer{background:var(--bg2);}
+.ft-top{padding:clamp(52px,8vh,100px) var(--g);display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:clamp(24px,4vw,52px);}
+.ft-seal{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.2rem;font-weight:800;color:rgba(255,255,255,.7);margin-bottom:16px;}
+.ft-name{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:8px;}
+.ft-motto{font-size:11px;font-style:italic;color:rgba(255,255,255,.45);letter-spacing:.04em;margin-bottom:16px;font-family:var(--serif);}
+.ft-desc{font-size:12px;color:rgba(255,255,255,.38);line-height:1.85;max-width:240px;margin-bottom:22px;}
+[data-theme="dark"] .ft-desc{color:var(--t3);}
+.ft-soc{display:flex;gap:8px;}
+.ft-soc-a{width:34px;height:34px;border-radius:var(--rad);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);transition:all .28s;}
+.ft-soc-a:hover{background:var(--crimson);border-color:var(--crimson);color:#fff;}
+.ft-col-h{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:700;margin-bottom:18px;}
+.ft-col-l{display:flex;flex-direction:column;gap:10px;}
+.ft-col-l a{font-size:13px;color:rgba(255,255,255,.45);transition:color .25s;}
+.ft-col-l a:hover{color:rgba(255,255,255,.85);}
+.ft-bot{
+  padding:18px var(--g);border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.ft-bot span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.22);}
+@media(max-width:860px){.ft-top{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.ft-top{grid-template-columns:1fr;}.ft-bot{flex-direction:column;text-align:center;}}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:400px){
+  .hero-h1{font-size:2.4rem;}
+  .sh2{font-size:1.75rem;}
+  .hero-btns{flex-direction:column;}
+  .btn-crimson,.btn-ghost{justify-content:center;}
+  .hero-facts{gap:14px;}
+}
+@media(max-width:320px){
+  :root{--g:16px;}
+  .hero-h1{font-size:2rem;}
+  .sh2{font-size:1.5rem;}
+  .hdr-sub{display:none;}
+  .ub-sep{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ LOADER ════ -->
+<div id="loader">
+  <div class="ld-crest">CU</div>
+  <div class="ld-name">Crestwood University</div>
+  <div class="ld-motto">Veritas · Sapientia · Honor</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ldBar"></div></div>
+  <div class="ld-pct" id="ldPct">0%</div>
+</div>
+
+<!-- ════ UTILITY BAR ════ -->
+<div class="util-bar">
+  <div class="ub-left">Karachi, Pakistan &nbsp;·&nbsp; Est. 1962 &nbsp;·&nbsp; Applications Open for Fall 2026</div>
+  <div class="ub-right">
+    <a href="#" class="ub-link">Student Portal</a>
+    <span class="ub-sep">|</span>
+    <a href="#" class="ub-link">Alumni</a>
+    <span class="ub-sep">|</span>
+    <a href="#" class="ub-link">Research</a>
+    <span class="ub-sep">|</span>
+    <button class="dm-btn" id="dmBtn"><span class="dm-icon" id="dmIcon">☾</span><span id="dmTxt">Dark</span></button>
+  </div>
+</div>
+
+<!-- ════ HEADER ════ -->
+<header id="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-logo">
+      <div class="hdr-seal">CU</div>
+      <div class="hdr-name-wrap">
+        <div class="hdr-name">Crestwood University</div>
+        <div class="hdr-sub">Veritas · Sapientia · Honor</div>
+      </div>
+    </div>
+    <nav class="nav-d">
+      <a href="#about">About</a>
+      <a href="#programmes">Programmes</a>
+      <a href="#faculty">Faculty</a>
+      <a href="#admissions">Admissions</a>
+      <a href="#news">News</a>
+      <a href="#apply" class="nav-cta">Apply Now</a>
+    </nav>
+    <button class="ham" id="ham"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-bg" id="mobBg"></div>
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-hdr">
+    <div class="mob-seal">CU</div>
+    <div>
+      <div class="mob-hdr-name">Crestwood University</div>
+      <div class="mob-hdr-sub">Veritas · Sapientia · Honor</div>
+    </div>
+  </div>
+  <nav class="mob-links">
+    <a href="#about"><span>About</span><em>01</em></a>
+    <a href="#programmes"><span>Programmes</span><em>02</em></a>
+    <a href="#faculty"><span>Faculty</span><em>03</em></a>
+    <a href="#admissions"><span>Admissions</span><em>04</em></a>
+    <a href="#news"><span>News</span><em>05</em></a>
+    <a href="#apply"><span>Contact</span><em>06</em></a>
+  </nav>
+  <div class="mob-foot">
+    <p>Crestwood University<br>University Road, Karachi 75270<br>+92 21 111 0000</p>
+    <a href="#apply" class="mob-apply-btn">Apply for Admission →</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ════ HERO ════ -->
+<section id="hero">
+  <div class="hero-rule"></div>
+  <div class="hero-body">
+    <div class="hero-left">
+      <div class="hero-bg-char">C</div>
+      <div class="hero-left-content">
+        <div class="hero-vol">Fall 2026 Admissions Now Open</div>
+        <h1 class="hero-h1">
+          Where Curious<br>Minds Become<br><em>Great Minds.</em>
+        </h1>
+        <div class="hero-quote">
+          <p>"The function of education is to teach one to think intensively and to think critically. Intelligence plus character — that is the goal of true education."</p>
+        </div>
+        <div class="hero-btns">
+          <a href="#apply" class="btn-crimson">Apply for Admission →</a>
+          <a href="#programmes" class="btn-ghost">Explore Programmes</a>
+        </div>
+        <div class="hero-facts">
+          <div class="hf"><div class="hf-n">62+</div><div class="hf-l">Years of Excellence</div></div>
+          <div class="hf"><div class="hf-n">24K</div><div class="hf-l">Students Enrolled</div></div>
+          <div class="hf"><div class="hf-n">180+</div><div class="hf-l">Programmes Offered</div></div>
+          <div class="hf"><div class="hf-n">#4</div><div class="hf-l">Ranked in Pakistan</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=1200&q=80" alt="Crestwood University campus"/>
+      <div class="hero-right-overlay"></div>
+      <div class="hero-caption">
+        <div class="hero-caption-text">"A community of scholars united by a passion for learning."</div>
+        <div class="hero-caption-sub">Main Quad — Crestwood University, Est. 1962</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ABOUT ════ -->
+<section class="sec" id="about">
+  <div class="about-grid">
+    <div class="about-img-frame">
+      <div class="aif-rule"></div>
+      <img class="aif-main" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&q=80" alt="University library"/>
+      <div class="aif-badge"><div class="aib-n">#4</div><div class="aib-l">Ranked Pakistan</div></div>
+    </div>
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Our Legacy</span></div>
+      <h2 class="sh2">Shaping Leaders for<br>Over <em>Six Decades.</em></h2>
+      <p class="sp">Founded in 1962, Crestwood University has cultivated generations of intellectuals, innovators, and civic leaders. Our ethos is simple: rigour, integrity, and the relentless pursuit of knowledge.</p>
+      <div class="about-pillars">
+        <div class="ap">
+          <div class="ap-num">01</div>
+          <div><div class="ap-title">Academic Excellence</div><div class="ap-desc">Our faculty includes 340 full-time professors, 78 of whom hold international research fellowships. Our graduates are accepted at the world's leading institutions.</div></div>
+        </div>
+        <div class="ap">
+          <div class="ap-num">02</div>
+          <div><div class="ap-title">Research & Innovation</div><div class="ap-desc">12 research centres publishing peer-reviewed work in STEM, humanities, social sciences, and law. Over PKR 2.4 billion in active research grants.</div></div>
+        </div>
+        <div class="ap">
+          <div class="ap-num">03</div>
+          <div><div class="ap-title">Student Life</div><div class="ap-desc">70+ student societies, a 45-acre campus, state-of-the-art sports facilities, and a globally-connected alumni network of 140,000 graduates.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ PROGRAMMES ════ -->
+<section class="sec sec-alt sec-ruled" id="programmes">
+  <div class="prog-intro">
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Academic Programmes</span></div>
+      <h2 class="sh2">Find Your <em>Calling.</em></h2>
+    </div>
+    <p class="sp">From undergraduate foundations to doctoral research, our 180+ programmes are designed to challenge convention, develop expertise, and prepare graduates for meaningful careers worldwide.</p>
+  </div>
+  <div class="prog-grid">
+    <div class="pcard"><div class="pcard-color" style="background:#8b1a1a;"></div><div class="pcard-body"><div class="pcard-cat">Sciences</div><div class="pcard-title">Faculty of Natural & Applied Sciences</div><div class="pcard-desc">Physics, Chemistry, Biology, Computer Science, Mathematics, Environmental Science and Engineering programmes at BS, MS and PhD levels.</div><div class="pcard-meta"><span class="pm">BS · MS · PhD</span><span class="pm">4 Years</span><span class="pm">STEM Focus</span></div><a href="#" class="pcard-link">Explore Faculty →</a></div></div>
+    <div class="pcard"><div class="pcard-color" style="background:#b8962e;"></div><div class="pcard-body"><div class="pcard-cat">Business</div><div class="pcard-title">Crestwood Business School</div><div class="pcard-desc">BBA, MBA, Executive MBA and specialisations in Finance, Marketing, Entrepreneurship and Supply Chain Management.</div><div class="pcard-meta"><span class="pm">BBA · MBA</span><span class="pm">2–4 Years</span><span class="pm">AACSB Track</span></div><a href="#" class="pcard-link">Explore School →</a></div></div>
+    <div class="pcard"><div class="pcard-color" style="background:#1a2340;"></div><div class="pcard-body"><div class="pcard-cat">Law</div><div class="pcard-title">Faculty of Law & Jurisprudence</div><div class="pcard-desc">LLB, LLM and Diploma programmes in Corporate Law, Constitutional Law, International Law, and Human Rights.</div><div class="pcard-meta"><span class="pm">LLB · LLM</span><span class="pm">3–5 Years</span><span class="pm">Bar Prep</span></div><a href="#" class="pcard-link">Explore Faculty →</a></div></div>
+    <div class="pcard"><div class="pcard-color" style="background:#3a6e3a;"></div><div class="pcard-body"><div class="pcard-cat">Medicine</div><div class="pcard-title">College of Medicine & Health Sciences</div><div class="pcard-desc">MBBS, BDS, Pharmacy, and graduate medical programmes with clinical training at our affiliated teaching hospital.</div><div class="pcard-meta"><span class="pm">MBBS · BDS</span><span class="pm">5 Years</span><span class="pm">PMC Accredited</span></div><a href="#" class="pcard-link">Explore College →</a></div></div>
+    <div class="pcard"><div class="pcard-color" style="background:#6a3a8e;"></div><div class="pcard-body"><div class="pcard-cat">Arts & Humanities</div><div class="pcard-title">School of Arts, Languages & Culture</div><div class="pcard-desc">Literature, History, Philosophy, Linguistics, Fine Arts and Media Studies. Critically acclaimed research in Urdu and world literature.</div><div class="pcard-meta"><span class="pm">BA · MA</span><span class="pm">2–4 Years</span><span class="pm">Research-Led</span></div><a href="#" class="pcard-link">Explore School →</a></div></div>
+    <div class="pcard"><div class="pcard-color" style="background:#8b4a1a;"></div><div class="pcard-body"><div class="pcard-cat">Engineering</div><div class="pcard-title">Faculty of Engineering & Technology</div><div class="pcard-desc">Civil, Mechanical, Electrical, Chemical and Software Engineering. NCEAC and PEC accredited with industrial partnerships.</div><div class="pcard-meta"><span class="pm">BE · ME</span><span class="pm">4 Years</span><span class="pm">PEC Accredited</span></div><a href="#" class="pcard-link">Explore Faculty →</a></div></div>
+  </div>
+</section>
+
+<!-- ════ ADMISSIONS PROCESS ════ -->
+<section class="sec" id="admissions">
+  <div class="process-hdr">
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Admissions</span></div>
+      <h2 class="sh2">Your Journey to <em>Crestwood</em> Begins Here.</h2>
+    </div>
+    <p class="sp">Our admissions process is designed to identify exceptional students who will thrive in Crestwood's academic culture and contribute to our community. Applications for Fall 2026 are open until 31st May.</p>
+  </div>
+  <div class="proc-steps">
+    <div class="pstep"><div class="ps-num">01</div><div class="ps-title">Submit Application</div><div class="ps-desc">Complete the online application form, upload your academic documents, and write your personal statement.</div><div class="ps-deadline">🗓 Deadline: 31 May 2026</div></div>
+    <div class="pstep"><div class="ps-num">02</div><div class="ps-title">Entrance Assessment</div><div class="ps-desc">Sit the Crestwood Academic Aptitude Test (CAAT) at one of our test centres or online via our secure portal.</div><div class="ps-deadline">🗓 Tests: June 2026</div></div>
+    <div class="pstep"><div class="ps-num">03</div><div class="ps-title">Interview & Review</div><div class="ps-desc">Shortlisted candidates are invited for an interview with faculty from their chosen department.</div><div class="ps-deadline">🗓 Interviews: July 2026</div></div>
+    <div class="pstep"><div class="ps-num">04</div><div class="ps-title">Offer & Enrolment</div><div class="ps-desc">Successful candidates receive a conditional offer and complete enrolment through the student registration portal.</div><div class="ps-deadline">🗓 Enrol: August 2026</div></div>
+  </div>
+</section>
+
+<!-- ════ STATS BAND ════ -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="sstat"><div class="sstat-n">24,000+</div><div class="sstat-l">Students Enrolled</div></div>
+    <div class="sstat"><div class="sstat-n">140,000+</div><div class="sstat-l">Alumni Worldwide</div></div>
+    <div class="sstat"><div class="sstat-n">180+</div><div class="sstat-l">Degree Programmes</div></div>
+    <div class="sstat"><div class="sstat-n">340</div><div class="sstat-l">Full-Time Faculty</div></div>
+  </div>
+</div>
+
+<!-- ════ FACULTY ════ -->
+<section class="sec sec-alt" id="faculty">
+  <div class="faculty-hdr">
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Distinguished Faculty</span></div>
+      <h2 class="sh2">Learn from the <em>World's Best.</em></h2>
+    </div>
+    <p class="sp" style="max-width:280px;">Our faculty are not just teachers — they are active scholars, published researchers, and industry leaders.</p>
+  </div>
+  <div class="faculty-grid">
+    <div class="fcard"><div class="fcard-img"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80" alt=""/><div class="fcard-ov"><div class="fcard-ov-dept">Dept. of Physics</div><div class="fcard-ov-quote">"Science is the poetry of reality — I teach my students to see the world with wonder."</div></div></div><div class="fcard-info"><div class="fcard-name">Prof. Sarah Ahmed</div><div class="fcard-title">Dean of Sciences</div><div class="fcard-dept">Quantum Physics · MIT Alumna</div></div></div>
+    <div class="fcard"><div class="fcard-img"><img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80" alt=""/><div class="fcard-ov"><div class="fcard-ov-dept">Crestwood Business School</div><div class="fcard-ov-quote">"The best businesses solve real problems for real people — I help students find those problems."</div></div></div><div class="fcard-info"><div class="fcard-name">Prof. Omar Siddiqui</div><div class="fcard-title">Dean of Business School</div><div class="fcard-dept">Strategic Management · Harvard MBA</div></div></div>
+    <div class="fcard"><div class="fcard-img"><img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80" alt=""/><div class="fcard-ov"><div class="fcard-ov-dept">Faculty of Law</div><div class="fcard-ov-quote">"Law without justice is merely violence dressed in robes. We teach students to demand both."</div></div></div><div class="fcard-info"><div class="fcard-name">Dr. Ayesha Malik</div><div class="fcard-title">Professor of Constitutional Law</div><div class="fcard-dept">Human Rights · Oxford LLM</div></div></div>
+    <div class="fcard"><div class="fcard-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt=""/><div class="fcard-ov"><div class="fcard-ov-dept">Faculty of Engineering</div><div class="fcard-ov-quote">"Engineering is applied imagination. My students build things the world has never seen before."</div></div></div><div class="fcard-info"><div class="fcard-name">Prof. Hassan Raza</div><div class="fcard-title">Head of Engineering</div><div class="fcard-dept">AI & Robotics · Cambridge PhD</div></div></div>
+  </div>
+</section>
+
+<!-- ════ NEWS ════ -->
+<section class="sec sec-ruled" id="news">
+  <div class="news-intro">
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">University News</span></div>
+      <h2 class="sh2">Latest from <em>Crestwood.</em></h2>
+    </div>
+    <p class="sp">Stay current with research breakthroughs, academic achievements, campus events and the stories that define Crestwood's place in the world.</p>
+  </div>
+  <div class="news-grid">
+    <div class="news-featured">
+      <div class="nf-img"><img src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=900&q=80" alt="Research lab"/></div>
+      <div class="nf-body">
+        <div class="nf-cat">Research</div>
+        <div class="nf-title">Crestwood Scientists Develop Breakthrough Water Purification Membrane</div>
+        <div class="nf-excerpt">A team led by Prof. Dr. Zainab Hashmi in the Chemistry Department has developed a novel nanofiltration membrane capable of removing 99.8% of microplastics from contaminated water.</div>
+        <div class="nf-meta">April 14, 2026 &nbsp;·&nbsp; Faculty of Sciences</div>
+      </div>
+    </div>
+    <div class="news-sidebar">
+      <div class="ns-item"><div class="ns-cat">Admissions</div><div class="ns-title">Fall 2026 Application Portal Now Open — 3,500 Places Available</div><div class="ns-meta">April 10, 2026</div></div>
+      <div class="ns-item"><div class="ns-cat">Partnerships</div><div class="ns-title">Crestwood Signs MoU with University of Cambridge for Joint Research</div><div class="ns-meta">April 6, 2026</div></div>
+      <div class="ns-item"><div class="ns-cat">Awards</div><div class="ns-title">Three Crestwood Alumni Named to Forbes 30 Under 30 Asia List</div><div class="ns-meta">March 28, 2026</div></div>
+      <div class="ns-item"><div class="ns-cat">Events</div><div class="ns-title">Annual Convocation Ceremony Set for July 12 — 4,200 Graduates</div><div class="ns-meta">March 22, 2026</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ TESTIMONIALS ════ -->
+<section class="sec sec-alt" id="testimonials">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(36px,5vh,60px);">
+    <div>
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Alumni Voices</span></div>
+      <h2 class="sh2">What Crestwood <em>Made Us.</em></h2>
+    </div>
+    <p class="sp" style="max-width:280px;">Our graduates carry the Crestwood spirit into every field — from medicine to government, technology to the arts.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="xcard"><div class="xc-quote">"</div><div class="xc-text">Crestwood gave me more than a degree. It gave me the discipline to think clearly, the courage to disagree respectfully, and the ambition to do work that genuinely matters.</div><div class="xc-auth"><div class="xc-av"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt=""/></div><div><div class="xc-name">Fatima Zaidi</div><div class="xc-info">Class of 2015 · CEO, HealthTech Pakistan</div></div></div></div>
+    <div class="xcard"><div class="xc-quote">"</div><div class="xc-text">The faculty here are exceptional — they don't just teach you what to think, they teach you how to think. That skill has been invaluable in my career as a research scientist at CERN.</div><div class="xc-auth"><div class="xc-av"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80" alt=""/></div><div><div class="xc-name">Dr. Bilal Akhtar</div><div class="xc-info">Class of 2011 · Research Physicist, CERN</div></div></div></div>
+    <div class="xcard"><div class="xc-quote">"</div><div class="xc-text">I arrived at Crestwood as an anxious first-generation university student. I left as a barrister, a Chevening Scholar, and a person unafraid to occupy the space they deserve.</div><div class="xc-auth"><div class="xc-av"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80" alt=""/></div><div><div class="xc-name">Sana Mirza</div><div class="xc-info">Class of 2018 · Barrister, London Chambers</div></div></div></div>
+  </div>
+</section>
+
+<!-- ════ TUITION ════ -->
+<section class="sec" id="tuition">
+  <div class="tuition-hdr">
+    <div class="eyebrow" style="justify-content:center;"><div class="ey-line"></div><span class="ey-txt">Tuition & Scholarships</span><div class="ey-line"></div></div>
+    <h2 class="sh2 center">An Education Worth <em>Every Rupee.</em></h2>
+    <p class="sp center">We believe financial circumstance should never limit academic potential. 40% of our students receive merit or need-based scholarships.</p>
+  </div>
+  <div class="tuition-grid">
+    <div class="tc2">
+      <div class="tc2-tier">Undergraduate</div>
+      <div class="tc2-price"><small>PKR</small> 185,000</div>
+      <div class="tc2-cycle">Per semester · 6–8 semesters</div>
+      <div class="tc2-div"></div>
+      <ul class="tc2-list">
+        <li>Access to all university facilities</li>
+        <li>Digital library & research databases</li>
+        <li>Career counselling services</li>
+        <li>Society & club membership</li>
+        <li>Student health insurance</li>
+      </ul>
+      <button class="tc2-btn">Apply Undergraduate</button>
+    </div>
+    <div class="tc2 feat">
+      <div class="tc2-badge">Most Applied</div>
+      <div class="tc2-tier">Postgraduate</div>
+      <div class="tc2-price"><small>PKR</small> 210,000</div>
+      <div class="tc2-cycle">Per semester · 2–4 semesters</div>
+      <div class="tc2-div"></div>
+      <ul class="tc2-list">
+        <li>Everything in Undergraduate</li>
+        <li>Research lab access</li>
+        <li>Thesis supervision</li>
+        <li>Conference travel bursary</li>
+        <li>Teaching assistantship eligible</li>
+        <li>Scholarship consideration priority</li>
+      </ul>
+      <button class="tc2-btn">Apply Postgraduate</button>
+    </div>
+    <div class="tc2">
+      <div class="tc2-tier">Doctoral (PhD)</div>
+      <div class="tc2-price"><small>PKR</small> 95,000</div>
+      <div class="tc2-cycle">Per semester · 6–8 semesters</div>
+      <div class="tc2-div"></div>
+      <ul class="tc2-list">
+        <li>Subsidised research fee</li>
+        <li>Full supervisor allocation</li>
+        <li>Research grant eligible</li>
+        <li>International conference support</li>
+        <li>Journal publication assistance</li>
+        <li>Fellowship & RA positions</li>
+      </ul>
+      <button class="tc2-btn">Apply for PhD</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FAQ ════ -->
+<section class="sec sec-alt" id="faq">
+  <div class="faq-wrap">
+    <div class="faq-sticky">
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">FAQ</span></div>
+      <h2 class="sh2">Admissions <em>Questions.</em></h2>
+      <p class="sp" style="margin-top:14px;">Still have questions? Our admissions office is open Monday–Friday, 9am to 5pm. Call +92 21 111 0000 or email admissions@crestwood.edu.pk</p>
+    </div>
+    <div class="faq-list">
+      <div class="fq"><div class="fq-q">What are the minimum entry requirements for undergraduate admission? <i class="fq-ico">+</i></div><div class="fq-body"><div class="fq-body-in">Most undergraduate programmes require a minimum of 60% in FSc/A-Levels or equivalent, with relevant subject pre-requisites. Engineering and Medical programmes have higher requirements (75%+). Specific requirements are listed on each programme's page. We also consider extracurricular achievements and the personal statement.</div></div></div>
+      <div class="fq"><div class="fq-q">Does Crestwood offer scholarships and financial aid? <i class="fq-ico">+</i></div><div class="fq-body"><div class="fq-body-in">Yes. We offer four scholarship categories: Merit Scholarships (top 10% of intake), Need-Based Bursaries (assessed via financial means test), Athletic Scholarships (for national-level athletes), and Talent Awards (for exceptional performance in arts, debate, or science olympiads). Approximately 40% of students receive some form of financial support.</div></div></div>
+      <div class="fq"><div class="fq-q">Is hostel accommodation available on campus? <i class="fq-ico">+</i></div><div class="fq-body"><div class="fq-body-in">Yes. We have separate hostels for male and female students, accommodating approximately 2,800 students in total. Rooms are allocated on a first-come, first-served basis after admission confirmation. We also maintain a list of verified off-campus housing near the university.</div></div></div>
+      <div class="fq"><div class="fq-q">Are international students eligible to apply? <i class="fq-ico">+</i></div><div class="fq-body"><div class="fq-body-in">Yes. Crestwood welcomes students from all countries. International applicants must provide equivalency certificates from the Inter-Board Committee of Chairmen (IBCC) and may need to demonstrate English proficiency via IELTS (minimum 6.5) or TOEFL (minimum 85). Special international student support services are available including visa assistance.</div></div></div>
+      <div class="fq"><div class="fq-q">Can I transfer to Crestwood from another university? <i class="fq-ico">+</i></div><div class="fq-body"><div class="fq-body-in">Transfer admissions are considered for students who have completed at least one full year at a recognised institution with a CGPA of 2.5 or above. Credit transfer is evaluated case by case by the relevant department. Transfer applications are accepted in limited numbers each intake — early application is strongly advised.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ APPLY / CONTACT ════ -->
+<section class="sec sec-ruled" id="apply">
+  <div class="apply-grid">
+    <div class="apply-info">
+      <div class="eyebrow"><div class="ey-line"></div><span class="ey-txt">Apply & Contact</span></div>
+      <h2 class="sh2">Begin Your <em>Crestwood</em> Journey.</h2>
+      <p class="sp" style="margin-bottom:8px;">Our admissions team is here to guide you through every step. Submit your enquiry and we'll respond within one working day.</p>
+      <div class="apply-contact-items">
+        <div class="aci"><div class="aci-ico">📍</div><div><div class="aci-lbl">Campus Address</div><div class="aci-val">University Road, PECHS Block 6<br>Karachi 75270, Pakistan</div></div></div>
+        <div class="aci"><div class="aci-ico">📞</div><div><div class="aci-lbl">Admissions Helpline</div><div class="aci-val">+92 21 111 000 111<br>Mon – Fri: 9:00am – 5:00pm</div></div></div>
+        <div class="aci"><div class="aci-ico">📧</div><div><div class="aci-lbl">Email</div><div class="aci-val">admissions@crestwood.edu.pk<br>info@crestwood.edu.pk</div></div></div>
+        <div class="aci"><div class="aci-ico">🏛️</div><div><div class="aci-lbl">Open Days</div><div class="aci-val">Every Saturday: 10am – 2pm<br>Campus tours available (book online)</div></div></div>
+      </div>
+    </div>
+    <div class="apply-form-wrap">
+      <div class="af-title">Admissions Enquiry</div>
+      <div class="af-sub">Fill in your details and our admissions team will be in touch within 24 hours.</div>
+      <div class="af-row">
+        <div class="af-field"><label class="af-label">First Name</label><input class="af-input" type="text" placeholder="Ahmed"/></div>
+        <div class="af-field"><label class="af-label">Last Name</label><input class="af-input" type="text" placeholder="Khan"/></div>
+        <div class="af-field"><label class="af-label">Email Address</label><input class="af-input" type="email" placeholder="ahmed@email.com"/></div>
+        <div class="af-field"><label class="af-label">Phone Number</label><input class="af-input" type="tel" placeholder="+92 300 0000000"/></div>
+        <div class="af-field full"><label class="af-label">Programme of Interest</label>
+          <select class="af-input af-select">
+            <option value="">Select a programme area</option>
+            <option>Natural & Applied Sciences</option>
+            <option>Business Administration (BBA/MBA)</option>
+            <option>Law (LLB/LLM)</option>
+            <option>Medicine & Health Sciences (MBBS)</option>
+            <option>Engineering & Technology (BE)</option>
+            <option>Arts, Languages & Culture</option>
+            <option>Doctoral Research (PhD)</option>
+          </select>
+        </div>
+        <div class="af-field full"><label class="af-label">Level of Study</label>
+          <select class="af-input af-select">
+            <option value="">Select level</option>
+            <option>Undergraduate (Bachelor's)</option>
+            <option>Postgraduate (Master's)</option>
+            <option>Doctoral (PhD)</option>
+            <option>Transfer Student</option>
+            <option>International Student</option>
+          </select>
+        </div>
+        <div class="af-field full"><label class="af-label">Your Message or Questions</label><textarea class="af-input" rows="4" placeholder="Tell us about your academic background and what you hope to study at Crestwood..." style="resize:vertical;"></textarea></div>
+      </div>
+      <button class="af-submit">Submit Enquiry →</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-seal">CU</div>
+      <div class="ft-name">Crestwood University</div>
+      <div class="ft-motto">Veritas · Sapientia · Honor</div>
+      <p class="ft-desc">A leading research university committed to academic excellence, intellectual freedom, and the development of Pakistan's future leaders since 1962.</p>
+      <div class="ft-soc">
+        <a class="ft-soc-a">Fb</a><a class="ft-soc-a">Tw</a><a class="ft-soc-a">In</a><a class="ft-soc-a">Yt</a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-h">Academics</div>
+      <div class="ft-col-l">
+        <a href="#">Undergraduate</a><a href="#">Postgraduate</a>
+        <a href="#">Doctoral</a><a href="#">Online Learning</a>
+        <a href="#">Research Centres</a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-h">Campus Life</div>
+      <div class="ft-col-l">
+        <a href="#">Student Societies</a><a href="#">Sports & Recreation</a>
+        <a href="#">Campus Housing</a><a href="#">Health Services</a>
+        <a href="#">International Office</a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-h">Useful Links</div>
+      <div class="ft-col-l">
+        <a href="#">Student Portal</a><a href="#">Library</a>
+        <a href="#">Alumni Network</a><a href="#">Careers Office</a>
+        <a href="#">Scholarships</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2026 Crestwood University — All rights reserved</span>
+    <span>Karachi, Pakistan · Est. 1962</span>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── LOADER ── */
+const ldBar=document.getElementById('ldBar'),ldPct=document.getElementById('ldPct'),ldEl=document.getElementById('loader');
+let p=0;
+const ldI=setInterval(()=>{
+  p=Math.min(p+Math.random()*10+4,100);
+  ldBar.style.width=p+'%';ldPct.textContent=Math.floor(p)+'%';
+  if(p>=100){clearInterval(ldI);setTimeout(()=>{ldEl.style.transition='opacity .7s';ldEl.style.opacity='0';setTimeout(()=>{ldEl.style.display='none';go();},720);},200);}
+},65);
+
+/* ── DARK MODE ── */
+const root=document.documentElement;
+const dmBtn=document.getElementById('dmBtn');
+const dmIcon=document.getElementById('dmIcon');
+const dmTxt=document.getElementById('dmTxt');
+function getTheme(){return root.getAttribute('data-theme');}
+function applyTheme(t){
+  root.setAttribute('data-theme',t);
+  localStorage.setItem('cu-theme',t);
+  dmIcon.textContent=t==='dark'?'☀':'☾';
+  dmTxt.textContent=t==='dark'?'Light':'Dark';
+}
+const saved=localStorage.getItem('cu-theme');
+if(saved)applyTheme(saved);
+else if(window.matchMedia('(prefers-color-scheme:dark)').matches)applyTheme('dark');
+dmBtn.addEventListener('click',()=>applyTheme(getTheme()==='dark'?'light':'dark'));
+
+/* ── HEADER SCROLL ── */
+const hdr=document.getElementById('hdr');
+window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+/* ── HAMBURGER ── */
+const ham=document.getElementById('ham'),mobD=document.getElementById('mobDrawer'),mobB=document.getElementById('mobBg');
+const openMob=()=>{ham.classList.add('open');mobD.classList.add('open');mobB.classList.add('open');document.body.style.overflow='hidden';};
+const closeMob=()=>{ham.classList.remove('open');mobD.classList.remove('open');mobB.classList.remove('open');document.body.style.overflow='';};
+ham.addEventListener('click',()=>ham.classList.contains('open')?closeMob():openMob());
+mobB.addEventListener('click',closeMob);
+document.querySelectorAll('.mob-links a,.mob-apply-btn').forEach(a=>a.addEventListener('click',closeMob));
+
+/* ── FAQ ── */
+document.querySelectorAll('.fq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const o=q.classList.contains('on');
+    document.querySelectorAll('.fq-q').forEach(x=>{x.classList.remove('on');x.nextElementSibling.style.height='0';});
+    if(!o){q.classList.add('on');const b=q.nextElementSibling;b.style.height=b.scrollHeight+'px';}
+  });
+});
+
+/* ── NAV ACTIVE ── */
+const sects=document.querySelectorAll('section[id]');
+const navAs=document.querySelectorAll('.nav-d a');
+window.addEventListener('scroll',()=>{
+  let c='';
+  sects.forEach(s=>{if(scrollY>=s.offsetTop-140)c=s.id;});
+  navAs.forEach(a=>{a.style.color=a.getAttribute('href')==='#'+c?'var(--crimson)':'';});
+},{passive:true});
+
+/* ── ANIMATIONS ── */
+function go(){
+  /* Hero */
+  gsap.timeline({defaults:{ease:'expo.out'}})
+    .from('.hero-rule',{scaleX:0,transformOrigin:'left',duration:.8,delay:.1})
+    .from('.hero-vol',{opacity:0,x:-20,duration:.7},'-=.3')
+    .from('.hero-h1',{opacity:0,y:50,duration:1},'-=.3')
+    .from('.hero-quote',{opacity:0,x:-16,duration:.7},'-=.5')
+    .from('.hero-btns',{opacity:0,y:16,duration:.6},'-=.4')
+    .from('.hf',{opacity:0,y:16,stagger:.1,duration:.5},'-=.3')
+    .from('.hero-right',{opacity:0,x:30,duration:.9},'-=.9');
+
+  /* Generic reveals */
+  ['.about-grid','.prog-intro','.process-hdr','.faculty-hdr','.news-intro','.tuition-hdr','.faq-sticky','.apply-info','.apply-form-wrap'].forEach(sel=>{
+    gsap.utils.toArray(sel).forEach(el=>{
+      gsap.fromTo(el,{opacity:0,y:30},{opacity:1,y:0,duration:.85,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}});
+    });
+  });
+
+  /* Stagger groups */
+  ['.pcard','.pstep','.fcard','.xcard','.tc2','.ap','.ns-item'].forEach(sel=>{
+    gsap.utils.toArray(sel).forEach((el,i)=>{
+      gsap.fromTo(el,{opacity:0,y:24},{opacity:1,y:0,duration:.7,delay:i*.09,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 91%',toggleActions:'play none none none'}});
+    });
+  });
+
+  /* Stats */
+  gsap.utils.toArray('.sstat').forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,y:20},{opacity:1,y:0,duration:.6,delay:i*.12,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+  });
+
+  /* FAQ */
+  gsap.utils.toArray('.fq').forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,x:-12},{opacity:1,x:0,duration:.55,delay:i*.07,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 91%'}});
+  });
+
+  /* About image decorative rule */
+  gsap.from('.aif-rule',{scale:0,opacity:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:'.about-grid',start:'top 80%'}});
+}
+</script>
+</body>
+</html>
